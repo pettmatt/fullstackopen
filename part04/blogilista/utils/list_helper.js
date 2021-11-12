@@ -17,29 +17,43 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-  
-  let result = []
 
-  blogs.forEach(blog => {
-    if(result.find(b => b.author === blog.author)) {
-      result.find(b => b.author === blog.author).blogs++
-    }
+  const newList = blogs.reduce((previous, current) => {
+    let found = previous.find(person => {
+      return person.author === current.author
+    })
 
-    else {
-      const object = {author: blog.author, blogs: 1};
-      result.push(object)
-    }
-      
-  })
+    if(!found) return previous.concat({ author: current.author, blogs: 1 })
 
-  return result.reduce((previous, current) => {
+    found.blogs++
+    return previous
+  }, [])
+
+  return newList.reduce((previous, current) => {
     return (previous.blogs <= current.blogs) ? current : previous
-  })
+  }) 
+}
+
+const mostLikes = (blogs) => {
+
+  const newList = blogs.reduce((previous, current) => {
+    let found = previous.find(person => {
+      return person.author === current.author
+    })
+
+    if(!found) return previous.concat({ author: current.author, likes: current.likes })
+
+    found.likes += current.likes
+    return previous
+  }, [])
+
+  return favoriteBlog(newList)
 }
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
