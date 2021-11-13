@@ -1,19 +1,14 @@
-const http = require('http')
-const express = require('express')
-const app = express()
-const cors = require('cors')
+const config = require('./utils/config')
+const logger = require('./utils/logger')
+const Blog = require('./models/blog')
+
 const mongoose = require('mongoose')
+const express = require('express')
+const cors = require('cors')
 
-const blogSchema = mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number
-})
+const app = express()
 
-const Blog = mongoose.model('Blog', blogSchema)
-
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     logger.info('connected to Mongo DB')
   })
