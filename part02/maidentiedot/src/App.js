@@ -10,18 +10,17 @@ const App = () => {
   const [ weather, setWeather ] = useState([])
 
   const handleFilterChange = (event) => setFilter(event.target.value.toLowerCase())
-  // If filter is used, 
-  // check if name of a country contains a specific string. If it doesn't contain, return -1.
-  const filteredResults = 
-    !filter ? countries : countries.filter(country => country.name.toLowerCase().indexOf(filter) !== -1)
 
-  // Fetch countries from restcountries.eu
+  // Fetch countries from restcountries.com
   useEffect(() => {
-    axios.get('https://restcountries.eu/rest/v2/all')
+    axios.get('https://restcountries.com/v3.1/all')
     .then(res => {
-        setCountries(res.data)
+      setCountries(res.data)
     })
   }, [])
+
+  // Filter countries based on if country includes specific character string
+  const filteredResults = countries.filter(country => country.name.common.toLowerCase().includes(filter))
 
   // Fetch weather information from api.weatherstack.com
   useEffect(() => {
@@ -31,7 +30,7 @@ const App = () => {
       if(capital[0]) {
         axios.get(`http://api.weatherstack.com/current?access_key=${API_KEY}&query=${capital[0]}`)
         .then(res => {
-          setWeather(res.data)
+          setWeather(res)
         })
         setQuery(false)
       }

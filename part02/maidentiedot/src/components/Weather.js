@@ -1,7 +1,9 @@
 import React from 'react'
 
 const Weather = ({ weather }) => {
-  //console.log(weather)
+
+  // component for weatherstack api.
+
   return (
     <div>
       <h3>Local weather</h3>

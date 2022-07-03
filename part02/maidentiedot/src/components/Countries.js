@@ -8,7 +8,7 @@ const Countries = ({ countryFilter, setFilter, weather }) => {
         Found <span>{countryFilter.length}</span> countries.
         {countryFilter.map((country, index) => 
           <li key={index}>
-            {country.name} <button onClick={() => setFilter(country.name.toLowerCase())}>Show details</button>
+            {country.name.common} <button onClick={() => setFilter(country.name.common.toLowerCase())}>Show details</button>
           </li>
         )}
       </ul>

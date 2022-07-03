@@ -3,7 +3,6 @@ const list = require('../utils/bloglist.js')
 
 test('dummy returns one', () => {
   const blogs = list
-
   const result = listHelper.dummy(blogs)
   expect(result).toBe(1)
 })

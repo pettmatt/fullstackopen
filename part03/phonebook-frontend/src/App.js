@@ -17,7 +17,7 @@ const App = () => {
       .then((people) => {
         setPersons(people)
       })
-  }, []);
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -27,15 +27,30 @@ const App = () => {
       number: newNumber
     }
 
-    if(newPerson.name === '' || newPerson.number === '') {
-      setNotification('Name or number missing.')
-      return
-    }
+    // if(newPerson.name === '' || newPerson.number === '') {
+    //   setNotification('Name or number missing.')
+    //   return
+    // }
+
+    // else if(newPerson.name.length <= 3) {
+    //   setNotification('Name needs to be longer than 3 characters.')
+    //   return
+    // }
+
+    // else if(newPerson.number.length < 8) {
+    //   setNotification('Number needs to be atleast 8 characters long.')
+    //   return
+    // }
+
+    // else if(newPerson.number.indexOf('-') !== -1 &&
+    //   !newPerson.number.includes('040') &&
+    //   !newPerson.number.includes('09')) {
+    //   setNotification('Number has to have specific structure. Ex. xxxxxxxx, 040-xxxxxx or 09-xxxxxx.')
+    //   return
+    // }
 
     // Check if already exists
-    if(
-      persons.find(person => person.name.toLowerCase() === newPerson.name.toLowerCase())
-    ){
+    if(persons.find(person => person.name.toLowerCase() === newPerson.name.toLowerCase())){
       if(window.confirm(`${newPerson.name} already exists. Do you want to update their number with given number (${newPerson.number})?`)){
         const updateThisPerson = persons.find((person) => person.name === newName)
 
@@ -65,10 +80,9 @@ const App = () => {
       personService.create(newPerson).then((person) => {
         setPersons(persons.concat(person)) // Update list
         setNotification(`"${person.name}" added`)
-      }).catch((err) => {
+      }).catch((err) => 
         setNotification(`Error occured while adding a person: ${err}`)
-      })
-      // setPersons(persons.concat(newPerson))
+      )
     }
 
     // No matter what the inputs are going to be wiped
@@ -92,7 +106,7 @@ const App = () => {
 
   const emptyNotification = () => {
     if(notification)
-      setNotification('');
+      setNotification('')
   }
 
   const showPersons = newFilter !== ''
