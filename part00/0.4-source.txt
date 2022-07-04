@@ -1,0 +1,38 @@
+note over browser:
+After page is successfully rendered
+user can make a new note.
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/notes
+
+note over server:
+server receives a body which
+contains the note
+
+Ex. { content: 'This is a note', date: new Date() }
+or
+{ note: 'This is a note' }
+end note
+
+server-->browser: Sends 201 CREATED or 500 BAD CLIENT/400 ERROR
+
+note over browser:
+if returned status code is OK, 
+update the note list
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: The list of notes in JSON-format
+
+note over browser:
+browser updates the list through 
+event handler
+end note
+
+note over browser:
+updating can also be 
+done through browser client by 
+adding the note to existing array
+after server responses with 
+positive status code
+end note

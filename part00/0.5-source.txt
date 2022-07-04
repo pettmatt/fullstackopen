@@ -1,0 +1,24 @@
+note over browser:
+user is trying to access the page
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+server-->browser: 304 OK - index.html
+
+note over browser:
+Client has received the main html-file
+which contains links to other files
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: 304 OK - main.css
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+server-->browser: 304 OK - spa.js
+
+note over browser:
+Executes code which contains GET request
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: List in JSON-format

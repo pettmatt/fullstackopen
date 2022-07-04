@@ -1,0 +1,19 @@
+note over browser:
+After page is successfully rendered
+user can make a new note.
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/notes
+
+note over server:
+receives a payload with body. Ex.
+{ content: "A friendly test", date: "2022-07-04T17:07:29.955Z" }
+end note
+
+server-->browser: Sends 201 CREATED - response { "message":"note created" }
+
+note over browser:
+browser contains the 
+necessary data to update the list
+without making a new GET request
+end note
