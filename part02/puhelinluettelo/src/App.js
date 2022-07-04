@@ -3,7 +3,7 @@ import Notification from './components/Notification'
 import Person from './components/Person'
 import Form from './components/Form'
 import Filter from './components/Filter'
-import axios from 'axios'
+import personService from './services/personService.js'
 
 const App = () => {
   const [ persons, setPersons] = useState([])
@@ -13,39 +13,81 @@ const App = () => {
   const [ notification, setNotification ] = useState('')
 
   useEffect(() => {
-    axios
-    // Local 'http://localhost:3001/persons'
-    // Online 'https://fullstackopen3b.herokuapp.com/persons'
-    .get('http://localhost:3001/persons')
-    .then(res => {
-      const data = res.data
-      setPersons(data)
-    })
-  }, []);
+    personService.getAll()
+      .then((people) => {
+        setPersons(people)
+      })
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
 
     const newPerson = {
-      id: persons.length + 1,
       name: newName,
       number: newNumber
     }
 
-    if(
-      persons.find(person => person.name.toLowerCase() === newPerson.name.toLowerCase()) ||
-      persons.find(person => person.number === newPerson.number)
-    ){
-      setNotification(`"${newPerson.name}, ${newPerson.number}" is invalid. Name or number already exists`)
+    // if(newPerson.name === '' || newPerson.number === '') {
+    //   setNotification('Name or number missing.')
+    //   return
+    // }
+
+    // else if(newPerson.name.length <= 3) {
+    //   setNotification('Name needs to be longer than 3 characters.')
+    //   return
+    // }
+
+    // else if(newPerson.number.length < 8) {
+    //   setNotification('Number needs to be atleast 8 characters long.')
+    //   return
+    // }
+
+    // else if(newPerson.number.indexOf('-') !== -1 &&
+    //   !newPerson.number.includes('040') &&
+    //   !newPerson.number.includes('09')) {
+    //   setNotification('Number has to have specific structure. Ex. xxxxxxxx, 040-xxxxxx or 09-xxxxxx.')
+    //   return
+    // }
+
+    // Check if already exists
+    if(persons.find(person => person.name.toLowerCase() === newPerson.name.toLowerCase())){
+      if(window.confirm(`${newPerson.name} already exists. Do you want to update their number with given number (${newPerson.number})?`)){
+        const updateThisPerson = persons.find((person) => person.name === newName)
+
+        const updatedPerson = {
+          name: updateThisPerson.name,
+          number: newPerson.number
+        }
+
+        personService.update(updateThisPerson.id, updatedPerson).then((updatedP) => {
+          setPersons(persons.map((person) => person.id !== updateThisPerson.id
+            ? person
+            : updatedP
+          ))
+
+          setNotification(`"${updatedPerson.name}" updated`)
+        })
+        .catch((err) => {
+          setNotification(`Error occured while updating: ${err}`)
+        })
+      }
+      else 
+        setNotification(`"${newPerson.name}, ${newPerson.number}" is invalid. Name already exists`)
     }
 
     else {
-      setPersons(persons.concat(newPerson))
-      setNewName('')
-      setNewNumber('')
+      // Create new person
+      personService.create(newPerson).then((person) => {
+        setPersons(persons.concat(person)) // Update list
+        setNotification(`"${person.name}" added`)
+      }).catch((err) => 
+        setNotification(`Error occured while adding a person: ${err}`)
+      )
     }
 
-    //console.log(persons)
+    // No matter what the inputs are going to be wiped
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleNameChange = (event) => {
@@ -64,12 +106,23 @@ const App = () => {
 
   const emptyNotification = () => {
     if(notification)
-      setNotification('');
+      setNotification('')
   }
 
   const showPersons = newFilter !== ''
     ? persons.filter((person) => person.name.toLowerCase().includes(newFilter.toLowerCase()) === true)
     : persons
+
+  const deletePerson = (id, name) => {
+    personService.deletePerson(id)
+    .then(() => {
+      setPersons(persons.filter(person => person.id !== id))
+      setNotification(`"${name}" has been removed`)
+    })
+    .catch((err) => {
+      setNotification(`"${name}" has already been removed`)
+    })
+  }
 
   return (
     <div>
@@ -90,7 +143,7 @@ const App = () => {
       <h2>Numbers</h2>
       <ul>
         {showPersons.map(person => 
-            <Person key={person.id} person={person} />
+          <Person key={person.id} person={person} deletePerson={deletePerson} />
         )}
       </ul>
     </div>
