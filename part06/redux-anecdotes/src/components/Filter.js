@@ -1,14 +1,16 @@
-import { useSelector, useDispatch } from 'react-redux'
+// import { useSelector, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { filterSet } from '../reducers/filterReducer'
 
-const Filter = () => {
-  const filter = useSelector(state => state.filter)
-  const dispatch = useDispatch()
+const Filter = (props) => {
+  // const filter = useSelector(state => state.filter)
+  // const dispatch = useDispatch()
+  const filter = props.filter
 
   const handleChange = (event) => {
-    event.preventDefault()
     const filterTerm = event.target.value
-    dispatch(filterSet(filterTerm))
+    // dispatch(filterSet(filterTerm))
+    props.filterSet(filterTerm)
   }
 
   const style = {
@@ -20,11 +22,14 @@ const Filter = () => {
       <h4>Filter anecdotes</h4>
       <div><input name='filter' onChange={handleChange} /></div>
 
-      { (filter === null) ? 
+      {(filter === null) ? 
       <small>Try filtering to find the perfect anecdote(s)</small>
-      : '' }
+      : ''}
     </div>
   )
 }
 
-export default Filter
+const mapStateToProps = (state) => { return { filter: state.filter }}
+const mapDispatchToProps = { filterSet }
+const ConnectFilter = connect(mapStateToProps, mapDispatchToProps)(Filter)
+export default ConnectFilter
