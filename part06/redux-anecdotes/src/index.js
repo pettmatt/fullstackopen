@@ -9,3 +9,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </Provider>
 )
+
+// anecdoteService.getAll().then(anecdotes => 
+//   anecdotes.forEach(a => {
+//     store.dispatch
+//   })
+// )

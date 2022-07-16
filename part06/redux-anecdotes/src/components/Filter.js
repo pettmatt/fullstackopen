@@ -6,6 +6,7 @@ const Filter = () => {
   const dispatch = useDispatch()
 
   const handleChange = (event) => {
+    event.preventDefault()
     const filterTerm = event.target.value
     dispatch(filterSet(filterTerm))
   }
