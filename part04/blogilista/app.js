@@ -29,7 +29,6 @@ app.use(middleware.getTokenFrom)
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
-app.use('/api/login', loginRouter)
 app.use('/api/testing', testingRouter)
 
 app.use(middleware.unknownEndpoint)
